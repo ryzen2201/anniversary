@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Love ❤️</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c300ff">
+<link rel="apple-touch-icon" href="icon.png">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    background:black;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+/* Netflix Intro */
+#intro{
+    position:absolute;
+    font-size:5rem;
+    font-weight:bold;
+    letter-spacing:10px;
+    color:red;
+    animation: netflix 3s ease forwards;
+}
+@keyframes netflix{
+    0%{opacity:0;transform:scale(0.5);}
+    50%{opacity:1;transform:scale(1.1);}
+    100%{opacity:0;transform:scale(0.9);}
+}
+
+/* Starry Sky */
+.stars{position:fixed;width:100%;height:100%;background:black;}
+.star{
+    position:absolute;width:2px;height:2px;background:white;border-radius:50%;
+    animation:twinkle 3s infinite;
+}
+@keyframes twinkle{0%,100%{opacity:0.2;}50%{opacity:1;}}
+
+/* Floating Elements */
+.particle{
+    position:absolute;
+    animation:floatUp 8s linear infinite;
+}
+@keyframes floatUp{
+    from{transform:translateY(100vh);}
+    to{transform:translateY(-10vh);opacity:0;}
+}
+
+/* Card */
+.card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(20px);
+    padding:40px;
+    border-radius:25px;
+    width:90%;
+    max-width:600px;
+    box-shadow:0 0 50px rgba(200,0,255,0.5);
+}
+
+button{
+    margin-top:20px;
+    padding:10px 25px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(90deg,#c300ff,#ff0080);
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+button:hover{transform:scale(1.05);}
+
+input{
+    padding:10px;
+    border-radius:20px;
+    border:none;
+    margin-top:10px;
+    width:80%;
+}
+
+#hiddenMsg{display:none;margin-top:15px;color:#ff66cc;}
+#mainContent{display:none;}
+
+/* Responsive */
+@media (max-width:600px){
+    .card{padding:25px;}
+    h1{font-size:1.6rem;}
+    button{width:100%;}
+    input{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<div id="intro">J</div>
+<div class="stars" id="stars"></div>
+
+<div id="loginScreen">
+    <div class="card">
+        <h2>Enter Our Special Password 💜</h2>
+        <input type="password" id="password" placeholder="Enter here">
+        <br>
+        <button onclick="checkPassword()">Unlock</button>
+        <div id="hiddenMsg">
+            Hint: The date our forever started 😉
+        </div>
+    </div>
+</div>
+
+<div id="mainContent">
+    <div class="card">
+        <h1>Happy 4th Anniversary ❤️</h1>
+        <div id="dayCounter" style="margin-top:10px;"></div>
+        <div id="typewriter" style="margin-top:20px;"></div>
+    </div>
+</div>
+
+<audio autoplay loop>
+<source src="music.mp3" type="audio/mp3">
+</audio>
+
+<script>
+// Hide intro after 3s
+setTimeout(()=>{document.getElementById("intro").style.display="none";},3000);
+
+// SHA-256 hash of 02222022
+const correctHash="1d5f1d3d9a7f13a4c2fdc0b6d1fd5a72f2ad1d21a9b9c7c0c7e6f87d51f5c90f";
+let attempts=0;
+
+async function sha256(message){
+    const msgBuffer=new TextEncoder().encode(message);
+    const hashBuffer=await crypto.subtle.digest("SHA-256",msgBuffer);
+    const hashArray=Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkPassword(){
+    const input=document.getElementById("password").value;
+    const hashed=await sha256(input);
+
+    if(hashed===correctHash){
+        document.getElementById("loginScreen").style.display="none";
+        document.getElementById("mainContent").style.display="block";
+        confettiExplosion();
+        startTypewriter();
+    }else{
+        attempts++;
+        if(attempts>=4){
+            document.getElementById("hiddenMsg").style.display="block";
+        }
+        alert("Wrong password 💔");
+    }
+}
+
+// Confetti
+function confettiExplosion(){
+    for(let i=0;i<80;i++){
+        let conf=document.createElement("div");
+        conf.className="particle";
+        conf.innerHTML="🎊";
+        conf.style.left=Math.random()*100+"%";
+        conf.style.fontSize=Math.random()*20+10+"px";
+        document.body.appendChild(conf);
+        setTimeout(()=>conf.remove(),8000);
+    }
+}
+
+// Stars
+for(let i=0;i<150;i++){
+    let star=document.createElement("div");
+    star.className="star";
+    star.style.top=Math.random()*100+"%";
+    star.style.left=Math.random()*100+"%";
+    document.getElementById("stars").appendChild(star);
+}
+
+// Floating Hearts
+setInterval(()=>{
+    let heart=document.createElement("div");
+    heart.className="particle";
+    heart.innerHTML="💜";
+    heart.style.left=Math.random()*100+"%";
+    heart.style.fontSize="20px";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),8000);
+},1000);
+
+// Day Counter
+const startDate=new Date("February 22, 2022");
+const now=new Date();
+const diff=now-startDate;
+const days=Math.floor(diff/(1000*60*60*24));
+document.getElementById("dayCounter").innerHTML=
+"We've been together for <b>"+days+"</b> days 💞";
+
+// Typewriter
+const message="Four years ago, I met my best friend. Through every laugh, every challenge, every quiet moment — I still choose you. Again. And again.";
+let i=0;
+function startTypewriter(){
+    if(i<message.length){
+        document.getElementById("typewriter").innerHTML+=message.charAt(i);
+        i++;
+        setTimeout(startTypewriter,40);
+    }
+}
+
+// Register Service Worker
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+
+</body>
+</html>
