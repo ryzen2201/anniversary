@@ -46,7 +46,7 @@ body{
 }
 @keyframes twinkle{0%,100%{opacity:0.2;}50%{opacity:1;}}
 
-/* Floating Elements */
+/* Floating Particles */
 .particle{
     position:absolute;
     animation:floatUp 8s linear infinite;
@@ -90,7 +90,6 @@ input{
 #hiddenMsg{display:none;margin-top:15px;color:#ff66cc;}
 #mainContent{display:none;}
 
-/* Responsive */
 @media (max-width:600px){
     .card{padding:25px;}
     h1{font-size:1.6rem;}
@@ -129,25 +128,16 @@ input{
 </audio>
 
 <script>
-// Hide intro after 3s
+// Hide intro
 setTimeout(()=>{document.getElementById("intro").style.display="none";},3000);
 
-// SHA-256 hash of 02222022
-const correctHash="3a1f0f8d6e6d7e2c3e1d9a7b9fcb5a0d4a0f6a60a4a4f5f7c7c7d3c4b5e6f7a8";
 let attempts=0;
 
-async function sha256(message){
-    const msgBuffer=new TextEncoder().encode(message);
-    const hashBuffer=await crypto.subtle.digest("SHA-256",msgBuffer);
-    const hashArray=Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-async function checkPassword(){
+// SIMPLE PLAIN PASSWORD
+function checkPassword(){
     const input=document.getElementById("password").value;
-    const hashed=await sha256(input);
 
-    if(hashed===correctHash){
+    if(input === "02222022"){
         document.getElementById("loginScreen").style.display="none";
         document.getElementById("mainContent").style.display="block";
         confettiExplosion();
@@ -213,12 +203,11 @@ function startTypewriter(){
     }
 }
 
-// Register Service Worker
+// Service Worker
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('service-worker.js');
 }
 </script>
 
 </body>
-
 </html>
