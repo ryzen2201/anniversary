@@ -4,318 +4,455 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Forever Begins Again</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Cinzel',serif;
-    letter-spacing:1px;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cinzel',serif;
 }
 
 body{
-    background:black;
-    color:white;
-    overflow:hidden;
-    transition:background 2s ease;
+background:linear-gradient(to bottom,#2a001f,#000);
+color:#ffe6f2;
+overflow:hidden;
 }
 
-/* ---------- INTRO ---------- */
+/* INTRO SCREEN */
 #startScreen{
-    position:fixed;
-    inset:0;
-    background:black;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    z-index:20;
-    cursor:pointer;
-    transition:opacity 1.5s ease;
+position:fixed;
+inset:0;
+background:#14000f;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+z-index:10;
+cursor:pointer;
+transition:opacity 1.5s ease;
 }
 
 #title{
-    font-size:3rem;
-    text-transform:uppercase;
-    opacity:0;
-    transform:scale(0.8);
-    transition:all 2s ease;
+font-size:3rem;
+opacity:0;
+transform:scale(0.8);
+transition:2s ease;
+color:#ffb3d9;
+width:100%;
+text-align:center;
+letter-spacing:4px;
 }
 
-#tapText{
-    margin-top:20px;
-    opacity:0.7;
-}
-
-/* ---------- STARFIELD ---------- */
+/* CANVAS */
 canvas{
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:-1;
+position:fixed;
+inset:0;
+}
+#stars{z-index:-3;}
+#galaxy{z-index:-2;}
+#fireworks{z-index:-1;pointer-events:none;}
+
+#loveMeter{
+position:fixed;
+top:20px;
+right:20px;
+font-size:14px;
+color:#ffccdd;
+opacity:0.9;
 }
 
-/* ---------- MAIN ---------- */
+/* MAIN */
 #mainContent{
-    display:none;
-    height:100vh;
-    overflow-y:auto;
+display:none;
+height:100vh;
+overflow-y:auto;
 }
 
 .section{
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    padding:40px 20px;
-    text-align:center;
-    opacity:0;
-    transform:translateY(40px);
-    transition:1s ease;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+padding:40px;
+text-align:center;
 }
 
-.section.active{
-    opacity:1;
-    transform:translateY(0);
+button{
+margin-top:20px;
+padding:12px 24px;
+border:none;
+border-radius:25px;
+background:#ff99cc;
+color:#4d0033;
+font-weight:bold;
+cursor:pointer;
+box-shadow:0 0 25px rgba(255,153,204,0.6);
 }
 
-.unlockBtn{
-    margin-top:20px;
-    padding:10px 20px;
-    border:none;
-    border-radius:20px;
-    background:#c300ff;
-    color:white;
-    cursor:pointer;
-}
+/* SLIDESHOW */
+#slideshowSection{display:none;}
 
-/* ---------- SLIDESHOW ---------- */
 .slideshow{
-    position:relative;
-    width:90%;
-    max-width:650px;
-    height:380px;
-    overflow:hidden;
-    border-radius:15px;
-    margin-top:20px;
-    box-shadow:0 0 40px rgba(195,0,255,0.3);
-}
-
-.slideshow::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(to bottom,rgba(0,0,0,0.3),rgba(0,0,0,0.6));
+position:relative;
+width:90%;
+max-width:750px;
+height:450px;
+overflow:hidden;
+border-radius:25px;
+background:#1a0014;
+display:flex;
+justify-content:center;
+align-items:center;
+box-shadow:0 0 40px rgba(255,182,193,0.4);
 }
 
 .slideshow img{
-    position:absolute;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    opacity:0;
-    transform:scale(1);
-    transition:opacity 1.2s ease, transform 8s ease;
+position:absolute;
+max-width:100%;
+max-height:100%;
+object-fit:contain;
+opacity:0;
+transition:opacity 1s ease;
+transform:scale(1);
 }
 
 .slideshow img.active{
-    opacity:1;
-    transform:scale(1.08);
+opacity:1;
 }
 
-/* ---------- FINAL SCENE ---------- */
-#finalScene{
-    position:fixed;
-    inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    opacity:0;
-    pointer-events:none;
-    z-index:50;
-    overflow:hidden;
+.zoomSlow{
+animation:zoomInImg 6s ease forwards;
 }
 
-#galaxyCanvas{
-    position:absolute;
-    inset:0;
-    z-index:-1;
+@keyframes zoomInImg{
+from{transform:scale(1);}
+to{transform:scale(1.12);}
 }
 
-#finalText{
-    text-align:center;
-    opacity:0;
-    transform:scale(0.8);
-    transition:all 3s ease;
-    animation:glowPulse 3s infinite;
+/* FINAL OVERLAY */
+#finalOverlay{
+position:fixed;
+inset:0;
+background:rgba(255,182,193,0.15);
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+pointer-events:none;
+z-index:20;
+transition:opacity 2s ease;
 }
 
-#finalText h1{
-    font-size:3rem;
-    margin-bottom:20px;
+#finalOverlay.show{
+opacity:1;
 }
 
-#finalText h2{
-    font-size:2rem;
-    opacity:0.8;
+.finalBox{
+text-align:center;
+animation:glow 3s infinite alternate;
 }
 
-@keyframes glowPulse{
-    0%{text-shadow:0 0 10px #c300ff;}
-    50%{text-shadow:0 0 40px #ff00ff;}
-    100%{text-shadow:0 0 10px #c300ff;}
+@keyframes glow{
+from{text-shadow:0 0 15px #ff99cc;}
+to{text-shadow:0 0 50px #ffcce6;}
 }
 
-@keyframes zoomSlow{
-    from{transform:scale(1);}
-    to{transform:scale(1.08);}
-}
-
-.zooming{
-    animation:zoomSlow 10s ease forwards;
-}
-
+/* HEART */
 .heart{
-    position:absolute;
-    font-size:20px;
-    animation:floatUp 6s linear infinite;
+position:fixed;
+font-size:24px;
+animation:floatUp 6s linear forwards;
 }
 
 @keyframes floatUp{
-    0%{transform:translateY(100vh);opacity:0;}
-    20%{opacity:1;}
-    100%{transform:translateY(-10vh);opacity:0;}
+0%{transform:translateY(100vh);opacity:0;}
+20%{opacity:1;}
+100%{transform:translateY(-10vh);opacity:0;}
 }
 </style>
 </head>
 <body>
 
 <div id="startScreen">
-    <h1 id="title">Forever Begins Again</h1>
-    <p id="tapText">Tap to Begin</p>
+<h1 id="title">Forever Begins Again 💗</h1>
+<p>Tap to Begin</p>
 </div>
 
 <canvas id="stars"></canvas>
+<canvas id="galaxy"></canvas>
+<canvas id="fireworks"></canvas>
+
+<div id="loveMeter">Love Level: 0%</div>
 
 <div id="mainContent">
-
-    <!-- CHAPTER I -->
-    <div class="section active" id="chapter1">
-        <h1>Happy 4th Anniversary 💜</h1>
-        <p>This is Chapter IV of us.</p>
-        <button class="unlockBtn" onclick="unlockSlideshow()">Begin Our Memories</button>
-    </div>
-
-    <!-- CHAPTER II -->
-    <div class="section" id="chapter2">
-        <h2>Our Memories 📸</h2>
-
-        <div class="slideshow" id="slideshow">
-            <img src="photo1.jpg" class="active">
-            <img src="photo2.jpg">
-            <img src="photo3.jpg">
-            <img src="photo4.jpg">
-            <img src="photo5.jpg">
-            <img src="photo6.jpg">
-            <img src="photo7.jpg">
-            <img src="photo8.jpg">
-            <img src="photo9.jpg">
-            <img src="photo10.jpg">
-        </div>
-
-        <p id="slideProgress"></p>
-    </div>
-
+<div class="section">
+<h1>Happy 4th Anniversary 💕</h1>
+<button onclick="increaseLove()">Begin Our Memories</button>
 </div>
 
-<div id="finalScene">
-    <canvas id="galaxyCanvas"></canvas>
-    <div id="finalText">
-        <h1>Four years down…</h1>
-        <h2>Forever to go.</h2>
-    </div>
+<div class="section" id="slideshowSection">
+<h2>Our Memories 📸</h2>
+<div class="slideshow" id="slideshow">
+<img src="photo1.jpg" class="active">
+<img src="photo2.jpg">
+<img src="photo3.jpg">
+<img src="photo4.jpg">
+<img src="photo5.jpg">
+<img src="photo6.jpg">
+<img src="photo7.jpg">
+<img src="photo8.jpg">
+<img src="photo9.jpg">
+<img src="photo10.jpg">
+</div>
+</div>
+</div>
+
+<div id="finalOverlay">
+<div class="finalBox">
+<h1>Four years down…</h1>
+<h2>Forever to go 💗</h2>
+</div>
 </div>
 
 <audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mp3">
+<source src="music.mp3" type="audio/mp3">
 </audio>
 
 <script>
 
-/* ---------- SAFE DOM ---------- */
-const startScreen = document.getElementById("startScreen");
-const title = document.getElementById("title");
-const mainContent = document.getElementById("mainContent");
-const bgMusic = document.getElementById("bgMusic");
-const chapter2 = document.getElementById("chapter2");
-const slideProgress = document.getElementById("slideProgress");
+/* INTRO + MUSIC */
+const startScreen=document.getElementById("startScreen");
+const title=document.getElementById("title");
+const mainContent=document.getElementById("mainContent");
+const bgMusic=document.getElementById("bgMusic");
 
-/* ---------- INTRO ---------- */
 setTimeout(()=>{
-    title.style.opacity="1";
-    title.style.transform="scale(1)";
+title.style.opacity="1";
+title.style.transform="scale(1)";
 },500);
 
-startScreen.addEventListener("click",()=>{
-    startScreen.style.opacity="0";
-    setTimeout(()=>{
-        startScreen.style.display="none";
-        mainContent.style.display="block";
-        document.body.style.overflow="auto";
-    },1500);
-    bgMusic.play();
-});
+startScreen.onclick=()=>{
+startScreen.style.opacity="0";
 
-/* ---------- UNLOCK SLIDESHOW ---------- */
-function unlockSlideshow(){
-    chapter2.classList.add("active");
-    window.scrollTo({top:window.innerHeight,behavior:"smooth"});
-}
+setTimeout(()=>{
+startScreen.style.display="none";
+mainContent.style.display="block";
+document.body.style.overflow="auto";
+},1500);
 
-/* ---------- SLIDESHOW FLOW ---------- */
-let slideIndex=0;
-const slides=document.querySelectorAll(".slideshow img");
+bgMusic.volume=0;
+bgMusic.play().catch(()=>{});
 
-function showSlide(i){
-    slides.forEach(s=>s.classList.remove("active"));
-    slides[i].classList.add("active");
-    slideProgress.innerText="Memory "+(i+1)+" of "+slides.length;
-}
+let vol = 0;
+const fadeIn = setInterval(()=>{
+    vol += 0.02;
 
-function nextSlide(){
-    slideIndex++;
-    if(slideIndex<slides.length){
-        showSlide(slideIndex);
-    }else{
-        triggerFinal();
+    if(vol >= 1){
+        vol = 1;
+        clearInterval(fadeIn);
     }
+
+    bgMusic.volume = Math.min(vol,1);
+},100);
+};
+
+/* STARFIELD */
+const starCanvas=document.getElementById("stars");
+const sctx=starCanvas.getContext("2d");
+starCanvas.width=innerWidth;
+starCanvas.height=innerHeight;
+
+let stars=[];
+for(let i=0;i<200;i++){
+stars.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,size:Math.random()*2,speed:Math.random()*0.5});
 }
 
-setInterval(nextSlide,5000);
+function animateStars(){
+sctx.clearRect(0,0,innerWidth,innerHeight);
+sctx.fillStyle="#ffd6ec";
+stars.forEach(s=>{
+s.y+=s.speed;
+if(s.y>innerHeight)s.y=0;
+sctx.beginPath();
+sctx.arc(s.x,s.y,s.size,0,Math.PI*2);
+sctx.fill();
+});
+requestAnimationFrame(animateStars);
+}
+animateStars();
 
-/* ---------- FINAL FLOW ---------- */
-function triggerFinal(){
-    document.getElementById("finalScene").style.opacity="1";
-    document.getElementById("finalText").style.opacity="1";
-    document.getElementById("finalText").classList.add("zooming");
-    spawnHearts();
+/* GALAXY */
+const galaxyCanvas=document.getElementById("galaxy");
+const gctx=galaxyCanvas.getContext("2d");
+galaxyCanvas.width=innerWidth;
+galaxyCanvas.height=innerHeight;
+
+let gstars=[];
+for(let i=0;i<300;i++){
+gstars.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,size:Math.random()*2,speed:Math.random()*0.2});
 }
 
-/* ---------- HEARTS ---------- */
-function spawnHearts(){
-    setInterval(()=>{
-        const heart=document.createElement("div");
-        heart.className="heart";
-        heart.innerHTML="💜";
-        heart.style.left=Math.random()*100+"vw";
-        heart.style.fontSize=(Math.random()*20+20)+"px";
-        document.getElementById("finalScene").appendChild(heart);
-        setTimeout(()=>heart.remove(),6000);
-    },600);
+function animateGalaxy(){
+let driftX=Math.sin(Date.now()*0.0002)*20;
+let driftY=Math.cos(Date.now()*0.0002)*20;
+
+gctx.fillStyle="rgba(255,182,193,0.08)";
+gctx.fillRect(0,0,innerWidth,innerHeight);
+
+gctx.fillStyle="#ffb3d9";
+gstars.forEach(s=>{
+s.y+=s.speed;
+if(s.y>innerHeight)s.y=0;
+gctx.beginPath();
+gctx.arc(s.x+driftX,s.y+driftY,s.size,0,Math.PI*2);
+gctx.fill();
+});
+requestAnimationFrame(animateGalaxy);
+}
+animateGalaxy();
+
+/* FIREWORKS ROCKET ENGINE */
+const fireCanvas=document.getElementById("fireworks");
+const fctx=fireCanvas.getContext("2d");
+fireCanvas.width=innerWidth;
+fireCanvas.height=innerHeight;
+
+let rockets=[];
+let particles=[];
+let fireworksActive=false;
+let rocketInterval;
+
+function launchRocket(){
+rockets.push({
+x:Math.random()*innerWidth,
+y:innerHeight,
+vx:(Math.random()-0.5)*2,
+vy:-8 - Math.random()*3,
+targetY:Math.random()*innerHeight/2
+});
+}
+
+function explode(x,y){
+if(navigator.vibrate){navigator.vibrate(20);}
+
+for(let i=0;i<70;i++){
+particles.push({
+x,y,
+vx:(Math.random()-0.5)*6,
+vy:(Math.random()-0.5)*6,
+alpha:1,
+decay:0.015,
+color:`hsl(${330 + Math.random()*20},100%,70%)`
+});
+}
+
+for(let i=0;i<6;i++){
+const heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="💗";
+heart.style.left=x+"px";
+heart.style.top=y+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),6000);
+}
+}
+
+function animateFireworks(){
+if(!fireworksActive)return;
+
+fctx.clearRect(0,0,innerWidth,innerHeight);
+
+/* Rockets */
+for(let i=rockets.length-1;i>=0;i--){
+let r=rockets[i];
+r.x+=r.vx;
+r.y+=r.vy;
+r.vy+=0.1;
+
+fctx.fillStyle="#ff99cc";
+fctx.beginPath();
+fctx.arc(r.x,r.y,3,0,Math.PI*2);
+fctx.fill();
+
+if(r.y<=r.targetY){
+explode(r.x,r.y);
+rockets.splice(i,1);
+}
+}
+
+/* Particles */
+for(let i=particles.length-1;i>=0;i--){
+let p=particles[i];
+p.x+=p.vx;
+p.y+=p.vy;
+p.vy+=0.05;
+p.alpha-=p.decay;
+
+fctx.globalAlpha=p.alpha;
+fctx.fillStyle=p.color;
+fctx.beginPath();
+fctx.arc(p.x,p.y,3,0,Math.PI*2);
+fctx.fill();
+
+if(p.alpha<=0)particles.splice(i,1);
+}
+
+fctx.globalAlpha=1;
+requestAnimationFrame(animateFireworks);
+}
+
+/* LOVE SYSTEM */
+let lovePoints=0;
+
+function increaseLove(){
+lovePoints+=20;
+if(lovePoints>100)lovePoints=100;
+
+document.getElementById("loveMeter").innerText="Love Level: "+lovePoints+"%";
+
+if(lovePoints===100){
+
+document.getElementById("slideshowSection").style.display="flex";
+
+setTimeout(()=>{
+window.scrollTo({top:document.getElementById("slideshowSection").offsetTop,behavior:"smooth"});
+},300);
+
+fireworksActive=true;
+animateFireworks();
+
+rocketInterval=setInterval(()=>{launchRocket();},800);
+setTimeout(()=>{clearInterval(rocketInterval);},20000);
+
+startSlideshow();
+
+setTimeout(()=>{
+document.getElementById("finalOverlay").classList.add("show");
+setTimeout(()=>{
+document.getElementById("finalOverlay").classList.remove("show");
+},7000);
+},12000);
+}
+}
+
+/* SLIDESHOW */
+function startSlideshow(){
+const slides=document.querySelectorAll("#slideshow img");
+let index=0;
+
+setInterval(()=>{
+slides[index].classList.remove("active","zoomSlow");
+slides[index].style.transform="scale(1)";
+index=(index+1)%slides.length;
+slides[index].classList.add("active");
+if(Math.random()>0.5){
+slides[index].classList.add("zoomSlow");
+}
+},5000);
 }
 
 </script>
