@@ -3,20 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Forever Begins Again</title>
+<title>Four-ever and Always 💗</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Cinzel',serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cinzel',serif;}
 
 body{
 background:linear-gradient(to bottom,#ffb6d9,#1a0014);
-color:rgb(253, 33, 187);
+color:#ff1493;
 overflow:hidden;
 }
 
@@ -37,7 +32,7 @@ transition:opacity 1.5s ease;
 
 #title{
 font-size:2.8rem;
-color:rgb(208, 3, 133);
+color:#d00385;
 opacity:0;
 transform:scale(0.8);
 transition:2s ease;
@@ -45,10 +40,7 @@ letter-spacing:3px;
 }
 
 /* CANVAS LAYERS */
-canvas{
-position:fixed;
-inset:0;
-}
+canvas{position:fixed;inset:0;}
 #stars{z-index:-3;}
 #galaxy{z-index:-2;}
 #fireworks{z-index:-1;pointer-events:none;}
@@ -58,10 +50,10 @@ inset:0;
 position:fixed;
 top:20px;
 right:20px;
-font-size:20px;
+font-size:22px;
 font-weight:bold;
 color:white;
-text-shadow:0 0 15px #ff69b4;
+text-shadow:0 0 20px #ff69b4;
 z-index:5;
 }
 
@@ -120,53 +112,65 @@ opacity:0;
 transition:opacity 1s ease;
 }
 
-.slideshow img.active{
-opacity:1;
-}
+.slideshow img.active{opacity:1;}
 
-.zoomSlow{
-animation:zoomInImg 6s ease forwards;
-}
-
+.zoomSlow{animation:zoomInImg 6s ease forwards;}
 @keyframes zoomInImg{
 from{transform:scale(1);}
 to{transform:scale(1.12);}
 }
 
-/* FINAL */
-#finalOverlay{
+/* MODAL */
+#loveModal{
 position:fixed;
 inset:0;
-background:rgba(255,105,180,0.2);
 display:flex;
 justify-content:center;
 align-items:center;
+background:rgba(0,0,0,0.6);
 opacity:0;
 pointer-events:none;
-z-index:20;
-transition:opacity 2s ease;
+transition:opacity 0.6s ease;
+z-index:60;
 }
 
-#finalOverlay.show{
+#loveModal.show{
 opacity:1;
+pointer-events:auto;
 }
 
-.finalBox{
+.modalGlow{
+padding:40px;
+border-radius:30px;
 text-align:center;
-animation:glow 3s infinite alternate;
+color:white;
+background:linear-gradient(135deg,#ff69b4,#ffb6d9,#ff1493);
+background-size:300% 300%;
+animation:gradientMove 6s ease infinite, popIn 0.5s ease;
+box-shadow:0 0 40px #ff69b4, 0 0 80px #ffb6d9;
 }
 
-@keyframes glow{
-from{text-shadow:0 0 20px #ff69b4;}
-to{text-shadow:0 0 60px #ffb6d9;}
+.modalGlow h2{font-size:2rem;margin-bottom:15px;}
+.modalGlow p{font-size:1.1rem;margin:8px 0;}
+.modalSub{opacity:0.9;font-weight:bold;}
+
+@keyframes popIn{
+from{transform:scale(0.6);opacity:0;}
+to{transform:scale(1);opacity:1;}
 }
 
+@keyframes gradientMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* HEART */
 .heart{
 position:fixed;
 font-size:24px;
 animation:floatUp 6s linear forwards;
 }
-
 @keyframes floatUp{
 0%{transform:translateY(100vh);opacity:0;}
 20%{opacity:1;}
@@ -177,7 +181,7 @@ animation:floatUp 6s linear forwards;
 <body>
 
 <div id="startScreen">
-<h1 id="title">Forever Begins Again 💗</h1>
+<h1 id="title">Four-ever and Always 💗</h1>
 <p>Tap to Begin</p>
 </div>
 
@@ -210,10 +214,11 @@ animation:floatUp 6s linear forwards;
 </div>
 </div>
 
-<div id="finalOverlay">
-<div class="finalBox">
-<h1>Four years down…</h1>
-<h2>Forever to go 💗</h2>
+<div id="loveModal">
+<div class="modalGlow">
+<h2>Four years down…</h2>
+<p id="modalQuote"></p>
+<p class="modalSub">Forever to go 💗</p>
 </div>
 </div>
 
@@ -223,16 +228,13 @@ animation:floatUp 6s linear forwards;
 
 <script>
 
-/* INTRO (NO MUSIC HERE ANYMORE) */
+/* INTRO */
 const startScreen=document.getElementById("startScreen");
 const title=document.getElementById("title");
 const mainContent=document.getElementById("mainContent");
 const bgMusic=document.getElementById("bgMusic");
 
-setTimeout(()=>{
-title.style.opacity="1";
-title.style.transform="scale(1)";
-},500);
+setTimeout(()=>{title.style.opacity="1";title.style.transform="scale(1)";},500);
 
 startScreen.onclick=()=>{
 startScreen.style.opacity="0";
@@ -243,12 +245,11 @@ document.body.style.overflow="auto";
 },1500);
 };
 
-/* AUTO SCROLL SAFE FOR IPHONE */
+/* AUTO SCROLL */
 function autoScroll(){
 setTimeout(()=>{
-const slideSection=document.getElementById("slideshowSection");
-slideSection.getBoundingClientRect();
-slideSection.scrollIntoView({behavior:"smooth",block:"start"});
+document.getElementById("slideshowSection")
+.scrollIntoView({behavior:"smooth"});
 },500);
 }
 
@@ -256,74 +257,80 @@ slideSection.scrollIntoView({behavior:"smooth",block:"start"});
 let lovePoints=0;
 
 function increaseLove(){
-
 lovePoints+=20;
 if(lovePoints>100)lovePoints=100;
-
 document.getElementById("loveMeter").innerText="Love Level: "+lovePoints+"%";
 
 if(lovePoints===100){
-
-// show slideshow
 document.getElementById("slideshowSection").style.display="flex";
 autoScroll();
 startSlideshow();
+startMusic();
+startFireworks();
+showModal();
+}
+}
 
-// 🎵 MUSIC STARTS HERE
+/* MUSIC */
+function startMusic(){
 bgMusic.volume=0;
 bgMusic.play().catch(()=>{});
-
 let vol=0;
-const fadeInMusic=setInterval(()=>{
+const fade=setInterval(()=>{
 vol+=0.02;
-if(vol>=1){
-vol=1;
-clearInterval(fadeInMusic);
-}
-bgMusic.volume=Math.min(vol,1);
+if(vol>=1){vol=1;clearInterval(fade);}
+bgMusic.volume=vol;
 },100);
-
-// 🎆 FIREWORKS START
-startFireworks();
-}
 }
 
 /* SLIDESHOW */
 function startSlideshow(){
 const slides=document.querySelectorAll("#slideshow img");
 let index=0;
-
 setInterval(()=>{
 slides[index].classList.remove("active","zoomSlow");
 index=(index+1)%slides.length;
 slides[index].classList.add("active");
-if(Math.random()>0.5){
-slides[index].classList.add("zoomSlow");
-}
+if(Math.random()>0.5)slides[index].classList.add("zoomSlow");
 },5000);
 }
 
-/* FIREWORKS ENGINE (FIXED ROCKET ARC) */
+/* MODAL */
+function showModal(){
+const quotes=[
+"Love is choosing each other every single day.",
+"Loyalty is rare. And we found it.",
+"Four years. One forever.",
+"Real love grows stronger with time.",
+"You are my constant in every universe.",
+"In every lifetime, I choose you."
+];
+
+document.getElementById("modalQuote").innerText=
+quotes[Math.floor(Math.random()*quotes.length)];
+
+setTimeout(()=>{
+document.getElementById("loveModal").classList.add("show");
+},8000);
+
+setTimeout(()=>{
+document.getElementById("loveModal").classList.remove("show");
+},14000);
+}
+
+/* FIREWORKS */
 const fireCanvas=document.getElementById("fireworks");
 const fctx=fireCanvas.getContext("2d");
 fireCanvas.width=innerWidth;
 fireCanvas.height=innerHeight;
 
-let rockets=[];
-let particles=[];
-let active=false;
+let rockets=[],particles=[],active=false;
 
 function startFireworks(){
 active=true;
 animateFireworks();
-
-let rocketInterval=setInterval(()=>{
-launchRocket();
-},600);
-
-setTimeout(()=>{
-clearInterval(rocketInterval);
-},25000); // 25 seconds duration
+let rocketInt=setInterval(()=>launchRocket(),600);
+setTimeout(()=>clearInterval(rocketInt),25000);
 }
 
 function launchRocket(){
@@ -331,27 +338,17 @@ rockets.push({
 x:Math.random()*innerWidth,
 y:innerHeight,
 vx:(Math.random()-0.5)*1.5,
-vy:-10 - Math.random()*2,
-explodeY:Math.random()*innerHeight/2 + 50
+vy:-10
 });
 }
 
 function explode(x,y){
-
-if(navigator.vibrate){navigator.vibrate(15);}
-
+if(navigator.vibrate)navigator.vibrate(15);
 for(let i=0;i<80;i++){
-particles.push({
-x:x,
-y:y,
-vx:(Math.random()-0.5)*6,
-vy:(Math.random()-0.5)*6,
-alpha:1,
-decay:0.02
-});
+particles.push({x,y,vx:(Math.random()-0.5)*6,
+vy:(Math.random()-0.5)*6,alpha:1});
 }
-
-for(let i=0;i<6;i++){
+for(let i=0;i<5;i++){
 let heart=document.createElement("div");
 heart.className="heart";
 heart.innerHTML="💗";
@@ -364,98 +361,72 @@ setTimeout(()=>heart.remove(),6000);
 
 function animateFireworks(){
 if(!active)return;
-
 fctx.clearRect(0,0,innerWidth,innerHeight);
 
-/* Rockets */
 for(let i=rockets.length-1;i>=0;i--){
 let r=rockets[i];
-
 r.x+=r.vx;
 r.y+=r.vy;
-r.vy+=0.05;
-
+r.vy+=0.08;
 fctx.fillStyle="#ff69b4";
 fctx.beginPath();
 fctx.arc(r.x,r.y,3,0,Math.PI*2);
 fctx.fill();
-
-if(r.y<=r.explodeY){
+if(r.vy>=0){
 explode(r.x,r.y);
 rockets.splice(i,1);
 }
 }
 
-/* Particles */
 for(let i=particles.length-1;i>=0;i--){
 let p=particles[i];
-
 p.x+=p.vx;
 p.y+=p.vy;
 p.vy+=0.05;
-p.alpha-=p.decay;
-
+p.alpha-=0.02;
 fctx.globalAlpha=p.alpha;
 fctx.fillStyle="#ffc0db";
 fctx.beginPath();
 fctx.arc(p.x,p.y,3,0,Math.PI*2);
 fctx.fill();
-
-if(p.alpha<=0){
-particles.splice(i,1);
-}
+if(p.alpha<=0)particles.splice(i,1);
 }
 
 fctx.globalAlpha=1;
 requestAnimationFrame(animateFireworks);
 }
 
-/* GALAXY ENGINE (ALWAYS RUNNING) */
+/* GALAXY */
 const galaxyCanvas=document.getElementById("galaxy");
 const gctx=galaxyCanvas.getContext("2d");
-
 galaxyCanvas.width=innerWidth;
 galaxyCanvas.height=innerHeight;
 
 let galaxyStars=[];
-
 for(let i=0;i<300;i++){
 galaxyStars.push({
 x:Math.random()*innerWidth,
 y:Math.random()*innerHeight,
 size:Math.random()*2,
-speed:Math.random()*0.2+0.05
+speed:Math.random()*0.2
 });
 }
 
 function animateGalaxy(){
-
 let driftX=Math.sin(Date.now()*0.0002)*25;
 let driftY=Math.cos(Date.now()*0.0002)*25;
-
-gctx.fillStyle="rgba(20,0,20,0.25)";
+gctx.fillStyle="rgba(0,0,0,0.35)";
 gctx.fillRect(0,0,innerWidth,innerHeight);
-
 gctx.fillStyle="#ffb6d9";
-
 galaxyStars.forEach(star=>{
 star.y+=star.speed;
 if(star.y>innerHeight)star.y=0;
-
 gctx.beginPath();
-gctx.arc(
-star.x+driftX,
-star.y+driftY,
-star.size,
-0,
-Math.PI*2
-);
+gctx.arc(star.x+driftX,star.y+driftY,star.size,0,Math.PI*2);
 gctx.fill();
 });
-
 requestAnimationFrame(animateGalaxy);
 }
-
 animateGalaxy();
 
 </script>
