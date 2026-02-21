@@ -3,217 +3,321 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For My Love ❤️</title>
+<title>Forever Begins Again</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#c300ff">
-<link rel="apple-touch-icon" href="icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Cinzel',serif;
+    letter-spacing:1px;
+}
 
 body{
-    height:100vh;
-    overflow:hidden;
     background:black;
     color:white;
+    overflow:hidden;
+    transition:background 2s ease;
+}
+
+/* ---------- INTRO ---------- */
+#startScreen{
+    position:fixed;
+    inset:0;
+    background:black;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:20;
+    cursor:pointer;
+    transition:opacity 1.5s ease;
+}
+
+#title{
+    font-size:3rem;
+    text-transform:uppercase;
+    opacity:0;
+    transform:scale(0.8);
+    transition:all 2s ease;
+}
+
+#tapText{
+    margin-top:20px;
+    opacity:0.7;
+}
+
+/* ---------- STARFIELD ---------- */
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+
+/* ---------- MAIN ---------- */
+#mainContent{
+    display:none;
+    height:100vh;
+    overflow-y:auto;
+}
+
+.section{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:40px 20px;
+    text-align:center;
+    opacity:0;
+    transform:translateY(40px);
+    transition:1s ease;
+}
+
+.section.active{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.unlockBtn{
+    margin-top:20px;
+    padding:10px 20px;
+    border:none;
+    border-radius:20px;
+    background:#c300ff;
+    color:white;
+    cursor:pointer;
+}
+
+/* ---------- SLIDESHOW ---------- */
+.slideshow{
+    position:relative;
+    width:90%;
+    max-width:650px;
+    height:380px;
+    overflow:hidden;
+    border-radius:15px;
+    margin-top:20px;
+    box-shadow:0 0 40px rgba(195,0,255,0.3);
+}
+
+.slideshow::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to bottom,rgba(0,0,0,0.3),rgba(0,0,0,0.6));
+}
+
+.slideshow img{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transform:scale(1);
+    transition:opacity 1.2s ease, transform 8s ease;
+}
+
+.slideshow img.active{
+    opacity:1;
+    transform:scale(1.08);
+}
+
+/* ---------- FINAL SCENE ---------- */
+#finalScene{
+    position:fixed;
+    inset:0;
     display:flex;
     justify-content:center;
     align-items:center;
+    opacity:0;
+    pointer-events:none;
+    z-index:50;
+    overflow:hidden;
+}
+
+#galaxyCanvas{
+    position:absolute;
+    inset:0;
+    z-index:-1;
+}
+
+#finalText{
     text-align:center;
+    opacity:0;
+    transform:scale(0.8);
+    transition:all 3s ease;
+    animation:glowPulse 3s infinite;
 }
 
-/* Netflix Intro */
-#intro{
+#finalText h1{
+    font-size:3rem;
+    margin-bottom:20px;
+}
+
+#finalText h2{
+    font-size:2rem;
+    opacity:0.8;
+}
+
+@keyframes glowPulse{
+    0%{text-shadow:0 0 10px #c300ff;}
+    50%{text-shadow:0 0 40px #ff00ff;}
+    100%{text-shadow:0 0 10px #c300ff;}
+}
+
+@keyframes zoomSlow{
+    from{transform:scale(1);}
+    to{transform:scale(1.08);}
+}
+
+.zooming{
+    animation:zoomSlow 10s ease forwards;
+}
+
+.heart{
     position:absolute;
-    font-size:5rem;
-    font-weight:bold;
-    letter-spacing:10px;
-    color:red;
-    animation: netflix 3s ease forwards;
-}
-@keyframes netflix{
-    0%{opacity:0;transform:scale(0.5);}
-    50%{opacity:1;transform:scale(1.1);}
-    100%{opacity:0;transform:scale(0.9);}
+    font-size:20px;
+    animation:floatUp 6s linear infinite;
 }
 
-/* Starry Sky */
-.stars{position:fixed;width:100%;height:100%;background:black;}
-.star{
-    position:absolute;width:2px;height:2px;background:white;border-radius:50%;
-    animation:twinkle 3s infinite;
-}
-@keyframes twinkle{0%,100%{opacity:0.2;}50%{opacity:1;}}
-
-/* Floating Particles */
-.particle{
-    position:absolute;
-    animation:floatUp 8s linear infinite;
-}
 @keyframes floatUp{
-    from{transform:translateY(100vh);}
-    to{transform:translateY(-10vh);opacity:0;}
-}
-
-/* Card */
-.card{
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(20px);
-    padding:40px;
-    border-radius:25px;
-    width:90%;
-    max-width:600px;
-    box-shadow:0 0 50px rgba(200,0,255,0.5);
-}
-
-button{
-    margin-top:20px;
-    padding:10px 25px;
-    border:none;
-    border-radius:30px;
-    background:linear-gradient(90deg,#c300ff,#ff0080);
-    color:white;
-    cursor:pointer;
-    transition:0.3s;
-}
-button:hover{transform:scale(1.05);}
-
-input{
-    padding:10px;
-    border-radius:20px;
-    border:none;
-    margin-top:10px;
-    width:80%;
-}
-
-#hiddenMsg{display:none;margin-top:15px;color:#ff66cc;}
-#mainContent{display:none;}
-
-@media (max-width:600px){
-    .card{padding:25px;}
-    h1{font-size:1.6rem;}
-    button{width:100%;}
-    input{width:100%;}
+    0%{transform:translateY(100vh);opacity:0;}
+    20%{opacity:1;}
+    100%{transform:translateY(-10vh);opacity:0;}
 }
 </style>
 </head>
 <body>
 
-<div id="intro">J</div>
-<div class="stars" id="stars"></div>
-
-<div id="loginScreen">
-    <div class="card">
-        <h2>Enter Our Special Password 💜</h2>
-        <input type="password" id="password" placeholder="Enter here">
-        <br>
-        <button onclick="checkPassword()">Unlock</button>
-        <div id="hiddenMsg">
-            Hint: The date our forever started 😉
-        </div>
-    </div>
+<div id="startScreen">
+    <h1 id="title">Forever Begins Again</h1>
+    <p id="tapText">Tap to Begin</p>
 </div>
+
+<canvas id="stars"></canvas>
 
 <div id="mainContent">
-    <div class="card">
-        <h1>Happy 4th Anniversary ❤️</h1>
-        <div id="dayCounter" style="margin-top:10px;"></div>
-        <div id="typewriter" style="margin-top:20px;"></div>
+
+    <!-- CHAPTER I -->
+    <div class="section active" id="chapter1">
+        <h1>Happy 4th Anniversary 💜</h1>
+        <p>This is Chapter IV of us.</p>
+        <button class="unlockBtn" onclick="unlockSlideshow()">Begin Our Memories</button>
+    </div>
+
+    <!-- CHAPTER II -->
+    <div class="section" id="chapter2">
+        <h2>Our Memories 📸</h2>
+
+        <div class="slideshow" id="slideshow">
+            <img src="photo1.jpg" class="active">
+            <img src="photo2.jpg">
+            <img src="photo3.jpg">
+            <img src="photo4.jpg">
+            <img src="photo5.jpg">
+            <img src="photo6.jpg">
+            <img src="photo7.jpg">
+            <img src="photo8.jpg">
+            <img src="photo9.jpg">
+            <img src="photo10.jpg">
+        </div>
+
+        <p id="slideProgress"></p>
+    </div>
+
+</div>
+
+<div id="finalScene">
+    <canvas id="galaxyCanvas"></canvas>
+    <div id="finalText">
+        <h1>Four years down…</h1>
+        <h2>Forever to go.</h2>
     </div>
 </div>
 
-<!-- FIXED AUDIO -->
 <audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mp3">
 </audio>
 
 <script>
-// Hide intro
+
+/* ---------- SAFE DOM ---------- */
+const startScreen = document.getElementById("startScreen");
+const title = document.getElementById("title");
+const mainContent = document.getElementById("mainContent");
+const bgMusic = document.getElementById("bgMusic");
+const chapter2 = document.getElementById("chapter2");
+const slideProgress = document.getElementById("slideProgress");
+
+/* ---------- INTRO ---------- */
 setTimeout(()=>{
-    document.getElementById("intro").style.display="none";
-},3000);
+    title.style.opacity="1";
+    title.style.transform="scale(1)";
+},500);
 
-let attempts=0;
+startScreen.addEventListener("click",()=>{
+    startScreen.style.opacity="0";
+    setTimeout(()=>{
+        startScreen.style.display="none";
+        mainContent.style.display="block";
+        document.body.style.overflow="auto";
+    },1500);
+    bgMusic.play();
+});
 
-// PASSWORD CHECK
-function checkPassword(){
-    const input=document.getElementById("password").value;
+/* ---------- UNLOCK SLIDESHOW ---------- */
+function unlockSlideshow(){
+    chapter2.classList.add("active");
+    window.scrollTo({top:window.innerHeight,behavior:"smooth"});
+}
 
-    if(input === "02222022"){
-        document.getElementById("loginScreen").style.display="none";
-        document.getElementById("mainContent").style.display="block";
-        confettiExplosion();
-        startTypewriter();
+/* ---------- SLIDESHOW FLOW ---------- */
+let slideIndex=0;
+const slides=document.querySelectorAll(".slideshow img");
 
-        // PLAY MUSIC AFTER USER INTERACTION
-        document.getElementById("bgMusic").play();
+function showSlide(i){
+    slides.forEach(s=>s.classList.remove("active"));
+    slides[i].classList.add("active");
+    slideProgress.innerText="Memory "+(i+1)+" of "+slides.length;
+}
+
+function nextSlide(){
+    slideIndex++;
+    if(slideIndex<slides.length){
+        showSlide(slideIndex);
     }else{
-        attempts++;
-        if(attempts>=4){
-            document.getElementById("hiddenMsg").style.display="block";
-        }
-        alert("Wrong password 💔");
+        triggerFinal();
     }
 }
 
-// Confetti
-function confettiExplosion(){
-    for(let i=0;i<80;i++){
-        let conf=document.createElement("div");
-        conf.className="particle";
-        conf.innerHTML="🎊";
-        conf.style.left=Math.random()*100+"%";
-        conf.style.fontSize=Math.random()*20+10+"px";
-        document.body.appendChild(conf);
-        setTimeout(()=>conf.remove(),8000);
-    }
+setInterval(nextSlide,5000);
+
+/* ---------- FINAL FLOW ---------- */
+function triggerFinal(){
+    document.getElementById("finalScene").style.opacity="1";
+    document.getElementById("finalText").style.opacity="1";
+    document.getElementById("finalText").classList.add("zooming");
+    spawnHearts();
 }
 
-// Stars
-for(let i=0;i<150;i++){
-    let star=document.createElement("div");
-    star.className="star";
-    star.style.top=Math.random()*100+"%";
-    star.style.left=Math.random()*100+"%";
-    document.getElementById("stars").appendChild(star);
+/* ---------- HEARTS ---------- */
+function spawnHearts(){
+    setInterval(()=>{
+        const heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="💜";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.fontSize=(Math.random()*20+20)+"px";
+        document.getElementById("finalScene").appendChild(heart);
+        setTimeout(()=>heart.remove(),6000);
+    },600);
 }
 
-// Floating Hearts
-setInterval(()=>{
-    let heart=document.createElement("div");
-    heart.className="particle";
-    heart.innerHTML="💜";
-    heart.style.left=Math.random()*100+"%";
-    heart.style.fontSize="20px";
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),8000);
-},1000);
-
-// Day Counter
-const startDate=new Date("February 22, 2022");
-const now=new Date();
-const diff=now-startDate;
-const days=Math.floor(diff/(1000*60*60*24));
-document.getElementById("dayCounter").innerHTML=
-"We've been together for <b>"+days+"</b> days 💞";
-
-// Typewriter
-const message="Four years ago, I met my best friend. Through every laugh, every challenge, every quiet moment — I still choose you. Again. And again.";
-let i=0;
-function startTypewriter(){
-    if(i<message.length){
-        document.getElementById("typewriter").innerHTML+=message.charAt(i);
-        i++;
-        setTimeout(startTypewriter,40);
-    }
-}
-
-// Service Worker
-if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('service-worker.js');
-}
 </script>
-
 </body>
 </html>
