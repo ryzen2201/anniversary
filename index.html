@@ -190,7 +190,7 @@ animation:floatUp 6s linear forwards;
 <div id="mainContent">
 <div class="section">
 <h1>Happy 4th Anniversary 💕</h1>
-<button onclick="increaseLove()"Click to unlock Love Archives</button>
+<button onclick="increaseLove()">Click to unlock Love Archives</button>
 </div>
 
 <div class="section" id="slideshowSection">
@@ -223,13 +223,16 @@ animation:floatUp 6s linear forwards;
 
 <script>
 
-/* INTRO */
+/* INTRO (NO MUSIC HERE ANYMORE) */
 const startScreen=document.getElementById("startScreen");
 const title=document.getElementById("title");
 const mainContent=document.getElementById("mainContent");
 const bgMusic=document.getElementById("bgMusic");
 
-setTimeout(()=>{title.style.opacity="1";title.style.transform="scale(1)";},500);
+setTimeout(()=>{
+title.style.opacity="1";
+title.style.transform="scale(1)";
+},500);
 
 startScreen.onclick=()=>{
 startScreen.style.opacity="0";
@@ -238,16 +241,6 @@ startScreen.style.display="none";
 mainContent.style.display="block";
 document.body.style.overflow="auto";
 },1500);
-
-bgMusic.volume=0;
-bgMusic.play().catch(()=>{});
-
-let vol=0;
-const fadeIn=setInterval(()=>{
-vol+=0.02;
-if(vol>=1){vol=1;clearInterval(fadeIn);}
-bgMusic.volume=Math.min(vol,1);
-},100);
 };
 
 /* AUTO SCROLL SAFE FOR IPHONE */
@@ -261,16 +254,36 @@ slideSection.scrollIntoView({behavior:"smooth",block:"start"});
 
 /* LOVE SYSTEM */
 let lovePoints=0;
+
 function increaseLove(){
-bgMusic.play().catch(()=>{});
+
 lovePoints+=20;
 if(lovePoints>100)lovePoints=100;
+
 document.getElementById("loveMeter").innerText="Love Level: "+lovePoints+"%";
 
 if(lovePoints===100){
+
+// show slideshow
 document.getElementById("slideshowSection").style.display="flex";
 autoScroll();
 startSlideshow();
+
+// 🎵 MUSIC STARTS HERE
+bgMusic.volume=0;
+bgMusic.play().catch(()=>{});
+
+let vol=0;
+const fadeInMusic=setInterval(()=>{
+vol+=0.02;
+if(vol>=1){
+vol=1;
+clearInterval(fadeInMusic);
+}
+bgMusic.volume=Math.min(vol,1);
+},100);
+
+// 🎆 FIREWORKS START
 startFireworks();
 }
 }
@@ -279,15 +292,18 @@ startFireworks();
 function startSlideshow(){
 const slides=document.querySelectorAll("#slideshow img");
 let index=0;
+
 setInterval(()=>{
 slides[index].classList.remove("active","zoomSlow");
 index=(index+1)%slides.length;
 slides[index].classList.add("active");
-if(Math.random()>0.5){slides[index].classList.add("zoomSlow");}
+if(Math.random()>0.5){
+slides[index].classList.add("zoomSlow");
+}
 },5000);
 }
 
-/* FIREWORKS + GALAXY */
+/* FIREWORKS ENGINE (FIXED ROCKET ARC) */
 const fireCanvas=document.getElementById("fireworks");
 const fctx=fireCanvas.getContext("2d");
 fireCanvas.width=innerWidth;
@@ -300,20 +316,42 @@ let active=false;
 function startFireworks(){
 active=true;
 animateFireworks();
-let rocketInt=setInterval(()=>{launchRocket();},700);
-setTimeout(()=>{clearInterval(rocketInt);},22000);
+
+let rocketInterval=setInterval(()=>{
+launchRocket();
+},600);
+
+setTimeout(()=>{
+clearInterval(rocketInterval);
+},25000); // 25 seconds duration
 }
 
 function launchRocket(){
-rockets.push({x:Math.random()*innerWidth,y:innerHeight,vy:-9,targetY:Math.random()*innerHeight/2});
+rockets.push({
+x:Math.random()*innerWidth,
+y:innerHeight,
+vx:(Math.random()-0.5)*1.5,
+vy:-10 - Math.random()*2,
+explodeY:Math.random()*innerHeight/2 + 50
+});
 }
 
 function explode(x,y){
-if(navigator.vibrate){navigator.vibrate(20);}
-for(let i=0;i<70;i++){
-particles.push({x,y,vx:(Math.random()-0.5)*6,vy:(Math.random()-0.5)*6,alpha:1});
+
+if(navigator.vibrate){navigator.vibrate(15);}
+
+for(let i=0;i<80;i++){
+particles.push({
+x:x,
+y:y,
+vx:(Math.random()-0.5)*6,
+vy:(Math.random()-0.5)*6,
+alpha:1,
+decay:0.02
+});
 }
-for(let i=0;i<5;i++){
+
+for(let i=0;i<6;i++){
 let heart=document.createElement("div");
 heart.className="heart";
 heart.innerHTML="💗";
@@ -326,81 +364,96 @@ setTimeout(()=>heart.remove(),6000);
 
 function animateFireworks(){
 if(!active)return;
+
 fctx.clearRect(0,0,innerWidth,innerHeight);
 
+/* Rockets */
 for(let i=rockets.length-1;i>=0;i--){
 let r=rockets[i];
+
+r.x+=r.vx;
 r.y+=r.vy;
-r.vy+=0.15;
+r.vy+=0.05;
+
 fctx.fillStyle="#ff69b4";
 fctx.beginPath();
 fctx.arc(r.x,r.y,3,0,Math.PI*2);
 fctx.fill();
-if(r.y<=r.targetY){explode(r.x,r.y);rockets.splice(i,1);}
+
+if(r.y<=r.explodeY){
+explode(r.x,r.y);
+rockets.splice(i,1);
+}
 }
 
+/* Particles */
 for(let i=particles.length-1;i>=0;i--){
 let p=particles[i];
+
 p.x+=p.vx;
 p.y+=p.vy;
 p.vy+=0.05;
-p.alpha-=0.02;
+p.alpha-=p.decay;
+
 fctx.globalAlpha=p.alpha;
-fctx.fillStyle="#ffb6d9";
+fctx.fillStyle="#ffc0db";
 fctx.beginPath();
 fctx.arc(p.x,p.y,3,0,Math.PI*2);
 fctx.fill();
-if(p.alpha<=0)particles.splice(i,1);
+
+if(p.alpha<=0){
+particles.splice(i,1);
+}
 }
 
 fctx.globalAlpha=1;
 requestAnimationFrame(animateFireworks);
 }
 
-/* GALAXY ENGINE */
-const galaxyCanvas = document.getElementById("galaxy");
-const gctx = galaxyCanvas.getContext("2d");
+/* GALAXY ENGINE (ALWAYS RUNNING) */
+const galaxyCanvas=document.getElementById("galaxy");
+const gctx=galaxyCanvas.getContext("2d");
 
-galaxyCanvas.width = window.innerWidth;
-galaxyCanvas.height = window.innerHeight;
+galaxyCanvas.width=innerWidth;
+galaxyCanvas.height=innerHeight;
 
-let galaxyStars = [];
+let galaxyStars=[];
 
-for (let i = 0; i < 300; i++) {
-    galaxyStars.push({
-        x: Math.random() * galaxyCanvas.width,
-        y: Math.random() * galaxyCanvas.height,
-        size: Math.random() * 2,
-        speed: Math.random() * 0.2 + 0.05
-    });
+for(let i=0;i<300;i++){
+galaxyStars.push({
+x:Math.random()*innerWidth,
+y:Math.random()*innerHeight,
+size:Math.random()*2,
+speed:Math.random()*0.2+0.05
+});
 }
 
-function animateGalaxy() {
+function animateGalaxy(){
 
-    let driftX = Math.sin(Date.now() * 0.0002) * 25;
-    let driftY = Math.cos(Date.now() * 0.0002) * 25;
+let driftX=Math.sin(Date.now()*0.0002)*25;
+let driftY=Math.cos(Date.now()*0.0002)*25;
 
-    gctx.fillStyle = "rgba(20,0,20,0.25)";
-    gctx.fillRect(0, 0, galaxyCanvas.width, galaxyCanvas.height);
+gctx.fillStyle="rgba(20,0,20,0.25)";
+gctx.fillRect(0,0,innerWidth,innerHeight);
 
-    gctx.fillStyle = "#ffb6d9";
+gctx.fillStyle="#ffb6d9";
 
-    galaxyStars.forEach(star => {
-        star.y += star.speed;
-        if (star.y > galaxyCanvas.height) star.y = 0;
+galaxyStars.forEach(star=>{
+star.y+=star.speed;
+if(star.y>innerHeight)star.y=0;
 
-        gctx.beginPath();
-        gctx.arc(
-            star.x + driftX,
-            star.y + driftY,
-            star.size,
-            0,
-            Math.PI * 2
-        );
-        gctx.fill();
-    });
+gctx.beginPath();
+gctx.arc(
+star.x+driftX,
+star.y+driftY,
+star.size,
+0,
+Math.PI*2
+);
+gctx.fill();
+});
 
-    requestAnimationFrame(animateGalaxy);
+requestAnimationFrame(animateGalaxy);
 }
 
 animateGalaxy();
