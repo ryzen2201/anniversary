@@ -123,17 +123,20 @@ input{
     </div>
 </div>
 
-<audio autoplay loop>
-<source src="music.mp3" type="audio/mp3">
+<!-- FIXED AUDIO -->
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mp3">
 </audio>
 
 <script>
 // Hide intro
-setTimeout(()=>{document.getElementById("intro").style.display="none";},3000);
+setTimeout(()=>{
+    document.getElementById("intro").style.display="none";
+},3000);
 
 let attempts=0;
 
-// SIMPLE PLAIN PASSWORD
+// PASSWORD CHECK
 function checkPassword(){
     const input=document.getElementById("password").value;
 
@@ -142,6 +145,9 @@ function checkPassword(){
         document.getElementById("mainContent").style.display="block";
         confettiExplosion();
         startTypewriter();
+
+        // PLAY MUSIC AFTER USER INTERACTION
+        document.getElementById("bgMusic").play();
     }else{
         attempts++;
         if(attempts>=4){
